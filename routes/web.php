@@ -11,8 +11,6 @@
 |
 */
 
-use src\Domain\Entity\UserEntity\UserEntity;
-
 Route::get('/', function () {
-    $user = new UserEntity();
+    return view('welcome');
 });
