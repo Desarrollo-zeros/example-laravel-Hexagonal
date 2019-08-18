@@ -18,9 +18,10 @@
  *
  */
 
-namespace src\Domain\Entity\UserEntity;
+namespace Src\Domain\Entity\UserEntity;
 
-use src\Domain\Base\Entity;
+use Src\Domain\Base\Entity;
+
 
 class UserEntity extends Entity
 {
@@ -78,7 +79,7 @@ class UserEntity extends Entity
      */
     public function getPassword()
     {
-        return $this->password;
+        return sha1($this->password);
     }
 
     /**

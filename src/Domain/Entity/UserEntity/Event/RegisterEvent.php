@@ -18,7 +18,7 @@
  *
  */
 
-namespace src\Domain\Entity\UserEntity\Event;
+namespace Src\Domain\Entity\UserEntity\Event;
 
 
 use DateTime;

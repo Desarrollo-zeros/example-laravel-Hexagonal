@@ -17,7 +17,7 @@
  *
  */
 
-namespace src\Domain\Base;
+namespace Src\Domain\Base;
 
 
 interface IEntity

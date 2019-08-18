@@ -18,11 +18,11 @@
  *
  */
 
-namespace src\Infrastructure\Base;
+namespace Src\Infrastructure\Base;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use src\Domain\Base\IEntity;
+use Src\Domain\Base\IEntity;
 
 
 class DbContextBase implements IDbContext

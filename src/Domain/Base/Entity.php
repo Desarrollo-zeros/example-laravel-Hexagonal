@@ -18,7 +18,7 @@
  *
  */
 
-namespace src\Domain\Base;
+namespace Src\Domain\Base;
 
 abstract class Entity implements IEntity
 {

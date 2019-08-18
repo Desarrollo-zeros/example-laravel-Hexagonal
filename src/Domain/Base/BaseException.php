@@ -18,9 +18,9 @@
  *
  */
 
-namespace  src\Domain\Base;
+namespace Src\Domain\Base;
 
-use src\Domain\Abstracts\IException;
+use Src\Domain\Abstracts\IException;
 
 class BaseException extends \Exception implements IException
 {

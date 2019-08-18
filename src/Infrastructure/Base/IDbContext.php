@@ -18,7 +18,7 @@
  *
  */
 
-namespace src\Infrastructure\Base;
+namespace Src\Infrastructure\Base;
 
 
 use Illuminate\Database\Eloquent\Model;

@@ -18,10 +18,10 @@
  *
  */
 
-namespace src\Domain\Abstracts;
+namespace Src\Domain\Abstracts;
 
 
-use src\Domain\Base\IEntity;
+use Src\Domain\Base\IEntity;
 
 interface IUnitOfWork
 {

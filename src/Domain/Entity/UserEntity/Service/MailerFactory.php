@@ -18,7 +18,7 @@
  *
  */
 
-namespace src\Domain\Entity\UserEntity\Service;
+namespace Src\Domain\Entity\UserEntity\Service;
 
 
 class MailerFactory

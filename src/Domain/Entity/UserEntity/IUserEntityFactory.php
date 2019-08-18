@@ -18,7 +18,7 @@
  *
  */
 
-namespace src\Domain\Entity\UserEntity;
+namespace Src\Domain\Entity\UserEntity;
 
 
 interface IUserEntityFactory

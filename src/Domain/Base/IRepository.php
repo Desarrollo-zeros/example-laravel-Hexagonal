@@ -18,10 +18,8 @@
  *
  */
 
-namespace src\Domain\Base;
+namespace Src\Domain\Base;
 
-use src\Domain\Base\Entity;
-use src\Domain\Base\IEntity;
 
 interface IRepository
 {

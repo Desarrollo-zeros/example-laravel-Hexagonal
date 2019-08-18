@@ -18,12 +18,12 @@
  *
  */
 
-namespace src\Infrastructure\Base;
+namespace Src\Infrastructure\Base;
 
 
-use src\Domain\Abstracts\IUnitOfWork;
-use src\Domain\Base\IEntity;
-use src\Infrastructure\DBContext;
+use Src\Domain\Abstracts\IUnitOfWork;
+use Src\Domain\Base\IEntity;
+use Src\Infrastructure\DBContext;
 
 class UnitOfWork implements IUnitOfWork
 {

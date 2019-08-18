@@ -18,14 +18,14 @@
  *
  */
 
-namespace src\Infrastructure\Base;
+namespace Src\Infrastructure\Base;
 
 
 use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use src\Domain\Base\IEntity;
-use src\Domain\Entity\UserEntity\IRepository;
+use Src\Domain\Base\IEntity;
+use Src\Domain\Base\IRepository;
 
 
 class GenericRepository implements IRepository

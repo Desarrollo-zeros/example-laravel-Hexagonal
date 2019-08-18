@@ -17,17 +17,16 @@
  *
  */
 
-namespace src\Infrastructure;
-
+namespace Src\Infrastructure;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use src\Domain\Base\IEntity;
-use src\Infrastructure\Base\BaseException;
-use src\Infrastructure\Base\DbContextBase;
+
+use Src\Domain\Base\BaseException;
+use Src\Domain\Base\IEntity;
+
+use Src\Infrastructure\Base\DbContextBase;
 
 
 class DBContext extends DbContextBase

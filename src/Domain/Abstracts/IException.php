@@ -17,7 +17,7 @@
  *
  */
 
-namespace src\Domain\Abstracts;
+namespace Src\Domain\Abstracts;
 
 interface IException
 {

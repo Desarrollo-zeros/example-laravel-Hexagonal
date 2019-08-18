@@ -1,13 +1,12 @@
 <?php
 
 
-namespace src\Domain\Base;
+namespace Src\Domain\Base;
 
 
-use src\Domain\Entity\UserEntity\IUserEntityFactory;
-use src\Domain\Entity\UserEntity\IUserEntityFactory1;
-use src\Domain\UserEntity;
-use src\Infrastructure\Base\BaseException;
+use Src\Domain\Entity\UserEntity\IUserEntityFactory;
+use Src\Domain\Entity\UserEntity\UserEntity;
+
 
 class BuilderFactory implements IUserEntityFactory
 {
