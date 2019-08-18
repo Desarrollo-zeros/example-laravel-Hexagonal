@@ -26,7 +26,7 @@ abstract class Entity implements IEntity
      * Column("name"="id","type"="integer");
      * @var int
     */
-    protected int $id = 0;
+    protected $id = 0;
 
     /**
      * @return int

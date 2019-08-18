@@ -18,7 +18,7 @@
  *
  */
 
-namespace src\Infrastructure\Base;
+namespace  src\Domain\Base;
 
 use src\Domain\Abstracts\IException;
 

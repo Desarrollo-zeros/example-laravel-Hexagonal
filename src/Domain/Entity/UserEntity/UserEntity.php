@@ -29,17 +29,17 @@ class UserEntity extends Entity
      * Column("name"="username","type"="string");
      * @var string
      */
-    private string $username;
+    private  $username;
     /**
      * Column("name"="password","type"="string");
      * @var string
      */
-    private string $password;
+    private  $password;
     /**
      * Column("name"="email","type"="string");
      * @var string
      */
-    private string $email;
+    private  $email;
 
 
     /**

@@ -36,6 +36,7 @@ class DBContext extends DbContextBase
      * @var Model
     */
     protected $db;
+
     private $entity;
 
     /**

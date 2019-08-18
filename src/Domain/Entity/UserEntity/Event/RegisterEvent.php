@@ -29,7 +29,7 @@ class RegisterEvent
     /**
      * @var int
     */
-    private int $userId = 0;
+    private $userId = 0;
 
     /**
      * @var DateTime

@@ -31,11 +31,11 @@ class MailerFactory
     /**
      * @var string
     */
-    private string $subject;
+    private  $subject;
     /**
      * @var string
      */
-    private string $body;
+    private  $body;
 
     public function __construct(MailerAdapterInterface $adapter, $subject = "welcome", $body = "test")
     {

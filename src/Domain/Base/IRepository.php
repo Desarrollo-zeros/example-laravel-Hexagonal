@@ -18,7 +18,7 @@
  *
  */
 
-namespace src\Domain\Entity\UserEntity;
+namespace src\Domain\Base;
 
 use src\Domain\Base\Entity;
 use src\Domain\Base\IEntity;
