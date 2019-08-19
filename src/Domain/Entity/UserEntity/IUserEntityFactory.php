@@ -23,6 +23,9 @@ namespace Src\Domain\Entity\UserEntity;
 
 interface IUserEntityFactory
 {
-    public static function createUser(int $id, string $username, string $password, string $email);
+    public static function createUser(string $username, string $password, string $email,int $id = 0);
+
+    public static function builder(string $instance, $data);
+
 }
 

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Example-laravel-Hexagonal has static methods for inflecting text.
  *
@@ -20,13 +19,31 @@
 
 namespace Src\Infrastructure\Base;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Src\Domain\Base\BaseException;
 use Src\Domain\Base\IEntity;
+use Src\Infrastructure\ORM;
 
 
-class DbContextBase implements IDbContext
+class DbContextBase extends ORM
 {
+
+    protected $db;
+
+    /**
+     * DbContextBase constructor.
+     * @param ORM $orm
+     * @throws BaseException
+     */
+    public function __construct(ORM $orm)
+    {
+        DB::beginTransaction();
+        parent::__construct($orm->getTable());
+        $this->db = $orm;
+
+    }
 
     /**
      * @param string $entity
@@ -34,12 +51,14 @@ class DbContextBase implements IDbContext
      */
     public function DbSet(string $entity): Model
     {
-        return null;
+        //exits db user table
+        $this->db->setTable("user"); //default
+        return $this->db;
     }
 
     /**
      * @param string $entity
-     * @return mixed|void
+     * @return Builder
      */
     public function DB(string $entity)
     {
@@ -52,8 +71,7 @@ class DbContextBase implements IDbContext
      */
     public function startRollback(string $entity): void
     {
-        DB::rollBack();
-        Log::warning("Error in Transaction, start rollBack in entity .$entity.");
+        parent::startRollback($entity);
         throw new BaseException($entity,"Error in Transaction, start rollBack in entity .$entity.");
     }
 
@@ -62,29 +80,22 @@ class DbContextBase implements IDbContext
      */
     public function startCommit(string $entity): void
     {
-        DB::commit();
-        Log::info("start commit in entity.$entity.");
+        parent::startCommit($entity);
     }
 
 
     /**
-     * @param IEntity $entity
+     * @param IEntity|object $entity
      * @return int
      */
-    public function SaveChanges(IEntity $entity): int
+    public function SaveChanges(object $entity = null): int
     {
-        $this->startCommit("entity");
+        if(!$entity){
+            $this->db->startRollback($this->table);
+            return 0;
+        }
+        $this->db->startCommit($this->table);
         return 1;
-    }
-
-    public function setEntity(string $entity): void
-    {
-        // TODO: Implement setEntity() method.
-    }
-
-    public function getEntity(): string
-    {
-        // TODO: Implement getEntity() method.
     }
 }
 

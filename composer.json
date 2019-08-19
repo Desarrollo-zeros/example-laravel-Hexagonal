@@ -11,7 +11,10 @@
         "php": "^7.4",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "5.8.*",
-        "laravel/tinker": "^1.0"
+        "laravel/tinker": "^1.0",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "ext-mysql_xdevapi": "*"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

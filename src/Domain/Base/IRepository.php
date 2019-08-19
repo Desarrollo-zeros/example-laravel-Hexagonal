@@ -26,51 +26,60 @@ interface IRepository
 
     /**
      * @param int $id
-     * @return Entity
+     * @return Entity|object
      */
-    public function find(int $id) : IEntity;
+    public function find(int $id);
+
+    /**
+     * @param array $where
+     * @param string $column
+     * @param string $direction
+     * @param int $take
+     * @param array $get
+     * @return Entity|object
+     */
+    public function findBy($where = ["id"=>1], $column = "id", $direction = "asc", $take = 100, $get = ["*"]) : object;
+
+    /**
+     * @param string $column
+     * @param string $direction
+     * @param int $take
+     * @param array $get
+     * @return object
+     */
+    public function getAll($column = "id", $direction = "asc", $take = 100, $get = ["*"]) : object ;
+
+    /**
+     * @param object|IEntity|array $entity
+     * @return Entity|object
+     */
+    public function add(object $entity) ;
+
 
     /**
      * @param array $entity
-     * @return Entity
-     */
-    public function findBy(array $entity) : IEntity;
-
-    /**
-     * @return array
-     */
-    public function getAll() : array;
-
-    /**
-     * @param Entity $entity
-     * @return Entity
-     */
-    public function add(IEntity $entity) : IEntity;
-
-    /**
-     * @param array $entity
-     * @return array
+     * @return bool
      */
     public function addRange(array $entity) : bool;
 
     /**
-     * @param IEntity $entity
-     * @return bool
+     * @param IEntity|object $entity
+     * @return int
      */
-    public function edit(IEntity $entity) : bool;
+    public function edit(object $entity) : int;
 
     /**
-     * @param IEntity $entity
+     * @param IEntity|object $entity
      * @return bool
      */
-    public function del(IEntity $entity) : bool;
+    public function del(object $entity) : bool;
 
     /**
-     * @param array $entity
+     * @param object $entity
      * @return bool
      */
-    public function deleteRange(array $entity) : bool;
-
-
+    public function deleteRange(object $entity) : bool;
+    public function toObject();
+    public function firstObject();
 
 }

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Example-laravel-Hexagonal has static methods for inflecting text.
  *
@@ -29,7 +28,7 @@ interface IDbContext
 {
     /**
      * @param string $entity
-     * @return Model
+     * @return Model|Builder
      */
     public function DbSet(string $entity) : Model;
 
@@ -40,10 +39,10 @@ interface IDbContext
     public function DB(string $entity);
 
     /**
-     * @param IEntity $entity
+     * @param IEntity|object $entity
      * @return int
      */
-    public function SaveChanges(IEntity $entity) : int;
+    public function SaveChanges(object $entity) : int;
 
     /**
      * @param string $entity
@@ -55,9 +54,7 @@ interface IDbContext
      */
     public function startRollback(string $entity) : void;
 
-    public function setEntity(string $entity) : void ;
 
-    public function getEntity() : string;
 
 
 }

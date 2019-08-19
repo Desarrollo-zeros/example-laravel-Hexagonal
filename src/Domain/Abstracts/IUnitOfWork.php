@@ -30,9 +30,18 @@ interface IUnitOfWork
      */
     public function commit() : int;
 
+    /**
+     *
+     */
     public function rollback() : void;
 
-    public function setEntity(IEntity $entity) : void ;
+    /**
+     * @param object|IEntity $entity
+     */
+    public function setEntity(object $entity) : void ;
 
-    public function getEntity() : IEntity;
+    /**
+     * @return object|IEntity
+     */
+    public function getEntity() : object ;
 }

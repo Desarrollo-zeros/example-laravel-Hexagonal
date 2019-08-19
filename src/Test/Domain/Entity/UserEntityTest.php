@@ -1,7 +1,27 @@
 <?php
+/**
+ * Example-laravel-Hexagonal has static methods for inflecting text.
+ *
+ * example DDD architecture
+ * use of hexagonal programming
+ *
+ * Hexagonal Architecture that allows us to develop and test our application in isolation from the framework,
+ * the database, third-party packages and all those elements that are around our application
+ *
+ * @link https://github.com/Desarrollo-zeros/example-laravel-Hexagonal
+ * @since  1.0
+ * @author dev zeros  <wowzeros2@gmail.com>
+ * @name UserEntityTest
+ * @file /src/Test/Domain/Entity/
+ * @observations example UserEntityTest domain entity
+ *
+ */
+
 
 namespace Src\Test\Domain\Entity;
 
+
+use Src\Domain\Base\BaseException;
 use Src\Domain\Base\BuilderFactory;
 use Src\Domain\Entity\UserEntity\UserEntity;
 use Src\Test\Test;
@@ -50,8 +70,20 @@ class UserEntityTest extends Test
     /**
      * @test BuilderFactory UserEntity
      */
-    public function createUser(){
-        $this->assertEquals(BuilderFactory::createUser(1,"zeros","toor","wowzeros2@gmail.com"),$this->user);
+    public function createUserSuccess(){
+        $this->assertEquals(BuilderFactory::createUser("zeros","toor","wowzeros2@gmail.com",1),$this->user);
         $this->prontoPrint("createUser success","success");
     }
+
+    /**
+     * @test BuilderFactory UserEntity
+     */
+    public function createUserFails(){
+        $ex = 'exception {"Entity":"UserEntity","status":true,"message":"Error in Transaction, start rollBack in entity UserEntity"}';
+        $this->prontoPrint($ex,"warning");
+        $this->withExceptionHandling();
+        $this->expectException(BaseException::class);
+        $user = BuilderFactory::createUser("s","toor","wowzeros2@gmail.com");
+    }
+
 }

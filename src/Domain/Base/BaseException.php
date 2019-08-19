@@ -25,9 +25,10 @@ use Src\Domain\Abstracts\IException;
 class BaseException extends \Exception implements IException
 {
 
-    public function __construct(string $entity,string $message, int $code = 0, Exception $previous = null)
+
+    public function __construct(string $entity = null,string $message = null)
     {
-        parent::__construct($this->message($entity,true,$message), $code, $previous);
+        parent::__construct((string)json_encode($this->message($entity,true,$message)));
     }
 
     public function message(string $entity, bool $status, string $message)

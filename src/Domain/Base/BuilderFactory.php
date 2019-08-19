@@ -18,11 +18,33 @@ class BuilderFactory implements IUserEntityFactory
      * @return UserEntity
      * @throws BaseException
      */
-    public static function createUser(int $id, string $username, string $password, string $email)
+    public static function createUser(string $username, string $password, string $email,int $id = 0)
     {
-        if(!isset($id)  || !isset($username) || !isset($password) || !isset($email)){
-            throw new BaseException("UserEntity","Error in Transaction, start rollBack in entity UserEntity");
+        if(empty($username) || empty($password) || empty($email)){
+            throw new BaseException(UserEntity::class,"Error in Transaction, start rollBack in entity UserEntity");
         }
         return new UserEntity($id,$username,$password,$email);
     }
+
+
+    /**
+     * @param string $instance
+     * @param $data
+     * @return object|UserEntity
+     * @throws BaseException
+     */
+    public static function Builder(string $instance, $data){
+        $data = (object)$data;
+        switch ($instance){
+            case UserEntity::class:{
+                return new UserEntity($data->id,$data->username,$data->password,$data->email);
+            }
+        }
+        return $data;
+    }
+
+
+
+
+
 }

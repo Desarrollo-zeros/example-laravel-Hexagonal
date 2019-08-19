@@ -20,6 +20,7 @@
 
 namespace Src\Domain\Entity\UserEntity;
 
+use Src\Domain\Base\BaseException;
 use Src\Domain\Base\Entity;
 
 
@@ -50,9 +51,22 @@ class UserEntity extends Entity
      * @param string $password
      * @param string $email
      * @observations overloaded constructor
+     * @throws BaseException
      */
     public function __construct(int $id, string $username, string $password, string $email){
         $this->id = $id;
+
+        if(strlen($username) < 3){
+            throw new BaseException(UserEntity::class,"Username no empty length < 3");
+        }
+
+        if(strlen($password) < 3){
+            throw new BaseException(UserEntity::class,"Password no empty length < 3");
+        }
+
+        if(!filter_var($email,FILTER_VALIDATE_EMAIL)){
+            throw new BaseException(UserEntity::class,"email invalid");
+        }
         $this->username = $username;
         $this->password = $password;
         $this->email = $email;
@@ -107,6 +121,18 @@ class UserEntity extends Entity
         $this->email = $email;
     }
 
+    public  function toArray(){
+        return [
+            "id" => $this->getId(),
+            "username" => $this->getUsername(),
+            "password" => $this->getPassword(),
+            "email" => $this->getEmail(),
+        ];
+    }
 
+    public function __toString()
+    {
+        return json_encode($this->toArray());
+    }
 
 }

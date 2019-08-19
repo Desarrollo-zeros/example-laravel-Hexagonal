@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Example-laravel-Hexagonal has static methods for inflecting text.
  *
@@ -22,6 +21,7 @@ namespace Src\Infrastructure\Base;
 
 
 use Src\Domain\Abstracts\IUnitOfWork;
+use Src\Domain\Base\BaseException;
 use Src\Domain\Base\IEntity;
 use Src\Infrastructure\DBContext;
 
@@ -29,7 +29,7 @@ class UnitOfWork implements IUnitOfWork
 {
 
     private $dbContext;
-    private $entity;
+    private $entity = null;
 
     /**
      * UnitOfWork constructor.
@@ -43,7 +43,6 @@ class UnitOfWork implements IUnitOfWork
 
     /**
      * @return int
-     * @throws BaseException
      */
     public function commit(): int
     {
@@ -58,15 +57,15 @@ class UnitOfWork implements IUnitOfWork
         $this->dbContext->startRollback("entity");
     }
     /**
-     * @param IEntity $entity
+     * @param IEntity|object $entity
      */
-    public function setEntity(IEntity $entity) : void{
+    public function setEntity(object $entity = null) : void{ //opcional use
         $this->entity = $entity;
     }
     /**
-     * @return IEntity
+     * @return IEntity|object
      */
-    public function getEntity() : IEntity {
-        return $this->entity;
+    public function getEntity() : object { //opcional use
+        return (object)$this->entity;
     }
 }

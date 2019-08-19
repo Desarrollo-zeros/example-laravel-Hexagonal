@@ -20,12 +20,8 @@
 namespace Src\Infrastructure;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Facades\DB;
-
 use Src\Domain\Base\BaseException;
-use Src\Domain\Base\IEntity;
-
+use Src\Domain\Entity\UserEntity\UserEntity;
 use Src\Infrastructure\Base\DbContextBase;
 
 
@@ -35,16 +31,18 @@ class DBContext extends DbContextBase
      * @var Model
     */
     protected $db;
-
     private $entity;
+
 
     /**
      * DBContext constructor.
-     * @param Model $model
+     * @throws BaseException
      */
-    public function __construct(Model $model)
+    public function __construct()
     {
-        $this->db = $model;
+
+        $this->db = new ORM();
+        parent::__construct($this->db);
     }
 
     /**
@@ -53,42 +51,20 @@ class DBContext extends DbContextBase
      */
     public function DbSet(string $entity): Model
     {
-        $this->db->setTable($entity);
+        //add entity
+        $dataEntity = [
+            UserEntity::class => [
+                "entity" => "user",
+                "fillable" => ["username","password","email"],
+                "timestamps" => false
+            ],
+        ];
+
+
+        $this->db->fillable = $dataEntity[$entity]["fillable"];
+        $this->db->timestamps = $dataEntity[$entity]["timestamps"];
+        $this->db->setTable($dataEntity[$entity]["entity"]);
         return $this->db;
-    }
-
-    /**
-     * @param string $entity
-     * @return Builder
-     */
-    public function DB(string $entity){
-        return DB::table($entity);
-    }
-
-    /**
-     * @param string $entity
-     */
-    public function setEntity(string $entity) : void{
-        $this->entity = $entity;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEntity() :string {
-        return $this->entity;
-    }
-
-
-    /**
-     * @param IEntity $entity
-     * @return int
-     * @throws BaseException
-     */
-    public function SaveChanges(IEntity $entity): int
-    {
-        if(!$entity) {$this->startRollback($this->getEntity()); return 0;}
-        return 1;
     }
 }
 
