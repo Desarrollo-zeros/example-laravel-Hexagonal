@@ -20,7 +20,9 @@
 
 namespace Src\Domain\Base;
 
-abstract class Entity implements IEntity
+use Src\Domain\Abstracts\IEntity;
+
+abstract class Entity  implements IEntity
 {
     /**
      * Column("name"="id","type"="integer");
@@ -42,6 +44,7 @@ abstract class Entity implements IEntity
     {
         $this->id = $id;
     }
+
 }
 
 

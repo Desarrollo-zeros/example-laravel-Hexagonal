@@ -19,52 +19,40 @@
 
 namespace Src\Infrastructure;
 
-use Illuminate\Database\Eloquent\Model;
-use Src\Domain\Base\BaseException;
-use Src\Domain\Entity\UserEntity\UserEntity;
-use Src\Infrastructure\Base\DbContextBase;
 
+use Src\Domain\Base\BaseException;
+use Src\Infrastructure\Base\DbContextBase;
 
 class DBContext extends DbContextBase
 {
-    /**
-     * @var Model
-    */
-    protected $db;
-    private $entity;
-
 
     /**
      * DBContext constructor.
+     * @param string name
      * @throws BaseException
      */
-    public function __construct()
+    public function __construct(string $name = "eloquent")
     {
+        parent::__construct($name);
+    }
 
-        $this->db = new ORM();
-        parent::__construct($this->db);
+    public function setDataEntity($dataEntity){
+        parent::setDataEntity($dataEntity);
+    }
+
+    public function getDataEntity(){
+        if($this->dataEntity){
+            return $this->dataEntity;
+        }
+        return parent::getDataEntity();
     }
 
     /**
      * @param string $entity
-     * @return Model
+     * @return Base\ORM\Eloquent\Eloquent
      */
-    public function DbSet(string $entity): Model
-    {
-        //add entity
-        $dataEntity = [
-            UserEntity::class => [
-                "entity" => "user",
-                "fillable" => ["username","password","email"],
-                "timestamps" => false
-            ],
-        ];
-
-
-        $this->db->fillable = $dataEntity[$entity]["fillable"];
-        $this->db->timestamps = $dataEntity[$entity]["timestamps"];
-        $this->db->setTable($dataEntity[$entity]["entity"]);
-        return $this->db;
+    public function DbSet(string $entity){ //forLaravel
+       return parent::DbSet($entity);
     }
 }
 

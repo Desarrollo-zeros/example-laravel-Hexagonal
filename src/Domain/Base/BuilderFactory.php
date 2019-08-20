@@ -35,6 +35,7 @@ class BuilderFactory implements IUserEntityFactory
      */
     public static function Builder(string $instance, $data){
         $data = (object)$data;
+
         switch ($instance){
             case UserEntity::class:{
                 return new UserEntity($data->id,$data->username,$data->password,$data->email);

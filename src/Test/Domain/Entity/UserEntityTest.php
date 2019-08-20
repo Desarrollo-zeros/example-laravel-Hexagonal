@@ -86,4 +86,8 @@ class UserEntityTest extends Test
         $user = BuilderFactory::createUser("s","toor","wowzeros2@gmail.com");
     }
 
+
+    public function test(){
+        dd($this->user->toArray());
+    }
 }

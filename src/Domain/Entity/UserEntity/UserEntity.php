@@ -121,7 +121,7 @@ class UserEntity extends Entity
         $this->email = $email;
     }
 
-    public  function toArray(){
+    public  function toArray() : array {
         return [
             "id" => $this->getId(),
             "username" => $this->getUsername(),
@@ -130,9 +130,5 @@ class UserEntity extends Entity
         ];
     }
 
-    public function __toString()
-    {
-        return json_encode($this->toArray());
-    }
 
 }

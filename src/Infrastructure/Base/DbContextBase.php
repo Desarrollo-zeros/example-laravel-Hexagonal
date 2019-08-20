@@ -18,84 +18,59 @@
  */
 
 namespace Src\Infrastructure\Base;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Src\Domain\Base\BaseException;
-use Src\Domain\Base\IEntity;
-use Src\Infrastructure\ORM;
+use Src\Domain\Entity\UserEntity\UserEntity;
+use Src\Infrastructure\Abstracts\IDBBaseContext;
+use Src\Infrastructure\Base\ORM\Eloquent;
+use Src\Infrastructure\Base\ORM\ORM;
 
 
-class DbContextBase extends ORM
+class DbContextBase extends ORM implements IDBBaseContext
 {
-
     protected $db;
+    public $dataEntity = null;
 
     /**
      * DbContextBase constructor.
-     * @param ORM $orm
+     * @param string $name
      * @throws BaseException
      */
-    public function __construct(ORM $orm)
+    public function __construct(string $name = "eloquent")
     {
-        DB::beginTransaction();
-        parent::__construct($orm->getTable());
-        $this->db = $orm;
-
+        parent::__construct($name);
+        $this->db = $this->getDb();
     }
+
 
     /**
      * @param string $entity
-     * @return Model
+     * @return Eloquent\Eloquent
      */
-    public function DbSet(string $entity): Model
+    public function DbSet(string $entity)
     {
-        //exits db user table
-        $this->db->setTable("user"); //default
-        return $this->db;
+        return $this->db->DbSet($entity,$this->getDataEntity());
+
     }
 
     /**
-     * @param string $entity
-     * @return Builder
+     * @return array|null
      */
-    public function DB(string $entity)
+    public function getDataEntity()
     {
-        return DB::table($entity);
+        return[
+            UserEntity::class => [
+                "entity" => "user",
+                "fillable" => ["id","username","password","email"],
+                "timestamps" => false
+        ],];
     }
 
     /**
-     * @param string $entity
-     * @throws BaseException
+     * @param $dataEntity
      */
-    public function startRollback(string $entity): void
+    public function setDataEntity($dataEntity)
     {
-        parent::startRollback($entity);
-        throw new BaseException($entity,"Error in Transaction, start rollBack in entity .$entity.");
-    }
-
-    /**
-     * @param string $entity
-     */
-    public function startCommit(string $entity): void
-    {
-        parent::startCommit($entity);
-    }
-
-
-    /**
-     * @param IEntity|object $entity
-     * @return int
-     */
-    public function SaveChanges(object $entity = null): int
-    {
-        if(!$entity){
-            $this->db->startRollback($this->table);
-            return 0;
-        }
-        $this->db->startCommit($this->table);
-        return 1;
+        $this->dataEntity = $dataEntity;
     }
 }
 
