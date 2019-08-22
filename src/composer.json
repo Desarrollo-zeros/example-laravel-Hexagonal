@@ -1,5 +1,10 @@
 {
     "require": {
         "philo/laravel-blade": "^3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Src\\" : "src/"
+        }
     }
 }

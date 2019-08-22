@@ -19,6 +19,7 @@ class ComposerStaticInit6ed39e6ef59ee4f5059c91f62d85f755
             'Symfony\\Component\\Translation\\' => 30,
             'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\Debug\\' => 24,
+            'Src\\' => 4,
         ),
         'P' => 
         array (
@@ -66,6 +67,10 @@ class ComposerStaticInit6ed39e6ef59ee4f5059c91f62d85f755
         'Symfony\\Component\\Debug\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/debug',
+        ),
+        'Src\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
         ),
         'Psr\\SimpleCache\\' => 
         array (

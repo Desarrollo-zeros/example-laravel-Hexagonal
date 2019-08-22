@@ -2,12 +2,17 @@
 
 namespace Src\UI;
 
-use Src\UI\Router\Route;
 
-include ("Router/Route.php");
 
-$directorio_base = __DIR__."../" ;
+require_once   './../../vendor/autoload.php';
+require_once   '../vendor/autoload.php';
 
-$r = new Route();
+require ("Route/Route.php");
 
-var_dump($r->file_get_class_methods($directorio_base."/Router/Route.php"));
+
+
+
+
+
+
+
