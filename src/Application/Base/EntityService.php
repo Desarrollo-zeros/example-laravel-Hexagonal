@@ -19,74 +19,167 @@
 
 namespace Src\Application\Base;
 
-
-
+use Exception;
+use http\Env\Response;
 use Src\Application\Abstracts\IEntityService;
+use Src\Domain\Abstracts\IEntity;
 use Src\Domain\Abstracts\IRepository;
 use Src\Domain\Abstracts\IUnitOfWork;
+use Src\Domain\Base\BaseException;
+use Src\Domain\Base\Entity;
 use Src\Infrastructure\Base\Collection;
 
-abstract class EntityService extends Collection implements IEntityService
+abstract class EntityService implements IEntityService
 {
-
     /**
      * @var IUnitOfWork
-    */
+     */
     protected $iUnitOfWork;
-
     /**
      * @var IRepository
-    */
+     */
     protected $repository;
 
-    public function __construct(IUnitOfWork $iUnitOfWork, IRepository $repository){
-         parent::__construct();
-    }
-    /**
-     * @return object
-     */
-    public function find(): object
+    private $response;
+
+
+    public function __construct(IUnitOfWork $iUnitOfWork, IRepository $repository)
     {
+        $this->iUnitOfWork = $iUnitOfWork;
+        $this->repository = $repository;
+        $this->response = new ServiceResponse();
 
     }
 
     /**
-     * @return array
+     * @param int $id
+     * @return array|\JsonSerializable|object|IEntity|Response
      */
-    public function findBy(): array
+    public function find(int $id)
     {
-        // TODO: Implement findBy() method.
+        if ($id == 0)
+        {
+            return $this->response->responseError("id not null");
+        }
+
+        try
+        {
+            return $this->response->responseSuccess("entity",$this->repository->find($id));
+        } catch (Exception $exception)
+        {
+            return  $this->response->responseError($exception->getMessage());
+        }
     }
 
     /**
-     * @return object
+     * @param array $entity
+     * @return array|object|Response
      */
-    public function create(): object
+    public function findBy(array $entity = [])
     {
-        // TODO: Implement create() method.
+        if (empty($entity))
+        {
+            return  $this->response->responseError("Finder not null");
+        }
+        try
+        {
+            return $this->response->responseSuccess("entity",$this->repository->findBy($entity)->get());
+        } catch (Exception $exception)
+        {
+            $this->response->responseError($exception->getMessage());
+        }
     }
 
     /**
-     * @return bool
+     * @param IEntity $entity
+     * @return array|bool|\JsonSerializable|object|Response
      */
-    public function delete(): bool
+    public function create(IEntity $entity)
     {
-        // TODO: Implement delete() method.
+        $entity->setId(0);
+        if ($entity == null)
+        {
+            return  $this->response->responseError("Entity null");
+        }
+        try
+        {
+            $entity = $this->repository->add($entity);
+            if ($entity != null)
+            {
+                //$this->iUnitOfWork->setEntity($entity); //optional
+                 if($this->iUnitOfWork->commit() > 0){
+                     return $this->response->responseSuccess("entity",$entity);
+                 }else{
+                     return  $this->response->responseError("Fail save to entity");
+                 }
+            }
+        } catch (Exception $exception)
+        {
+            return  $this->response->responseError($exception->getMessage());
+        }
+
+        return false;
     }
 
     /**
-     * @return array
+     * @param IEntity $entity
+     * @return bool|object|Response
      */
-    public function getAll(): array
+    public function delete(IEntity $entity)
     {
-        // TODO: Implement getAll() method.
+        if ($entity == null)
+        {
+            return  $this->response->responseError("Entity null");
+        }
+        try
+        {
+            $this->repository->del($entity);
+            if($this->iUnitOfWork->commit() > 0){
+                return $this->response->responseSuccess("entity",$entity);
+            }else{
+                return  $this->response->responseError("Fail delete to entity");
+            }
+        } catch (Exception $exception)
+        {
+            return  $this->response->responseError($exception->getMessage());
+        }
     }
 
     /**
-     * @return bool
+     * @return array|\JsonSerializable|object|Response
      */
-    public function update(): bool
+    public function getAll()
     {
-        // TODO: Implement update() method.
+        try
+        {
+            return $this->response->responseSuccess("entity",$this->repository->getAll());
+        } catch (Exception $exception)
+        {
+            return  $this->response->responseError($exception->getMessage());
+        }
+    }
+
+    /**
+     * @param IEntity $entity
+     * @return array|bool|\JsonSerializable|object|Response
+     */
+    public function update(IEntity $entity)
+    {
+        if ($entity == null)
+        {
+            return  $this->response->responseError("Entity null");
+        }
+        try
+        {
+            $this->repository->edit($entity);
+            if($this->iUnitOfWork->commit() > 0){
+                return $this->response->responseSuccess("entity",$entity);
+            }else{
+                return  $this->response->responseError("Fail update to entity");
+            }
+        } catch (Exception $exception)
+        {
+            return  $this->response->responseError($exception->getMessage());
+        }
     }
 }

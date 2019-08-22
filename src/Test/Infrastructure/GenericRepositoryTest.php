@@ -128,7 +128,7 @@ class GenericRepositoryTest extends  Test
      */
     public function addUserSuccess(){
         $entity = $this->repository->add($this->user);
-        $this->unitOfWork->setEntity($entity->entity); //opcional
+        $this->unitOfWork->setEntity($entity); //opcional
         $this->assertEquals($this->unitOfWork->commit(),1);
         $this->prontoPrint("Save entity -> UserEntity","success");
     }
@@ -144,11 +144,13 @@ class GenericRepositoryTest extends  Test
 
     /**
      * @test
-    */
+     * @throws BaseException
+     */
     public function getUserFinBySuccess(){
         $this->user = $this->repository->findBy(["username"=>"zeros"])->get();
-        $this->assertEquals($this->user->lastObject()->getUsername(),"zeros");
-        $this->assertEquals($this->user->firstObject()->getUsername(),"zeros");
+        dd($this->user);
+        $this->assertEquals($this->repository->lastObject($this->user)->getUsername(),"zeros");
+        $this->assertEquals($this->repository->firstObject($this->user)->getUsername(),"zeros");
         $this->prontoPrint("findBy entity -> UserEntity","success");
     }
 
@@ -159,7 +161,8 @@ class GenericRepositoryTest extends  Test
      */
     public function getUserAllSuccess(){
         $this->user = $this->repository->getAll();
-        $this->assertEquals($this->user->firstObject()->getUsername(),"zeros");
+        $this->assertEquals($this->repository->firstObject($this->user)->getUsername(),"zeros");
+        $this->assertEquals($this->repository->lastObject($this->user)->getUsername(),"zeros");
         $this->prontoPrint("getAll entity -> UserEntity","success");
     }
 

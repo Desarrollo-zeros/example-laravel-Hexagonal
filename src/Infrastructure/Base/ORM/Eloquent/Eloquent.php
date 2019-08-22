@@ -126,7 +126,6 @@ class Eloquent extends EloquentDb implements IDbContext
     }
 
 
-
     public function getEntity(){
         return $this->entity->toArray();
     }

@@ -21,12 +21,15 @@
 namespace Src\Domain\Abstracts;
 
 
+use PhpOption\Tests\Repository;
 use Src\Domain\Base\Entity;
 
 interface IRepository
 {
-
-
+    /**
+     * @param array $column
+     * @return
+     */
     public function get(array $column =["*"]);
 
     /**
@@ -37,18 +40,18 @@ interface IRepository
 
     /**
      * @param array $where
-     * @return mixed
+     * @return $this|Repository
      */
     public function findBy($where = []);
 
     /**
-     * @param array $columns
+     * @param array  $columns
      * @param string $column
      * @param string $direction
-     * @param int $take
-     * @return object
+     * @param int    $take
+     * @return array
      */
-    public function getAll($columns = ["*"],$column = "id", $direction = "asc", $take = 100) : object ;
+    public function getAll($columns = ["*"],$column = "id", $direction = "asc", $take = 100) : array ;
 
     /**
      * @param object|IEntity|array $entity
@@ -83,15 +86,20 @@ interface IRepository
     public function deleteRange(array $entity,string $column = "id") : bool;
 
     /**
-     * @return mixed
+     * @param array $data
+     * @return array
      */
-    public function toObject();
+    public function toObject(array $data = []);
 
     /**
+     * @param array $data
      * @return mixed
      */
-    public function firstObject() : object;
-    public function lastObject() : object;
+    public function firstObject(array $data = []) : object;
 
-
+    /**
+     * @param array $data
+     * @return object
+     */
+    public function lastObject(array $data = []) : object;
 }

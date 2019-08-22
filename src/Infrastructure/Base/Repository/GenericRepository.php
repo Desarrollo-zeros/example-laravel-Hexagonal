@@ -19,14 +19,17 @@
 
 namespace Src\Infrastructure\Base\Repository;
 
+use Hamcrest\Type\IsObject;
+use phpDocumentor\Reflection\Types\Object_;
+use PhpOption\Tests\Repository;
 use Src\Domain\Base\BaseException;
 use Src\Domain\Base\BuilderFactory;
 use Src\Domain\Abstracts\IEntity;
 use Src\Domain\Abstracts\IRepository;
+use Src\Domain\Base\Entity;
 use Src\Domain\Entity\UserEntity\UserEntity;
 use Src\Infrastructure\Abstracts\IDBBaseContext;
 use Src\Infrastructure\Abstracts\IDbContext;
-
 
 class GenericRepository implements IRepository
 {
@@ -35,7 +38,6 @@ class GenericRepository implements IRepository
      */
     public $entity;
     private $table;
-
     /**
      * Ok
      * @var IDbContext
@@ -58,87 +60,144 @@ class GenericRepository implements IRepository
     {
         //select *from entity where id = $id
         $entity = $this->_db->find($id);
-        if(!$entity){
-            throw new BaseException($this->table,"entity no exits");
+        if (!$entity)
+        {
+            throw new BaseException(
+                $this->table,
+                "entity no exits"
+            );
         }
-        return BuilderFactory::Builder($this->table,$entity->getEntity());
+
+        return BuilderFactory::Builder(
+            $this->table,
+            $entity->getEntity()
+        );
     }
 
-
-
+    /**
+     * @param array $where
+     * @return GenericRepository
+     */
     public function findBy($where = [])
     {
         $this->entity = $this->_db->where($where);
-        return $this;
-    }
 
-    public function get(array $column = ["*"])
-    {
-        $this->entity= $this->entity->get($column);
         return $this;
     }
 
     /**
+     * @param array $column
+     * @return mixed
+     * @throws BaseException
+     */
+    public function get(array $column = ["*"])
+    {
+        $entities = $this->toObject($this->entity->get($column)->toArray());
+        if(count($entities) == 1){
+            return $this->firstObject($entities);
+        }
+        return $entities;
+    }
+    /**
+     * @param array $data
      * @return array|mixed|object|IEntity|null
      * @throws BaseException
      */
-    public function toObject(){
-        if(is_array($this->entity->toArray())){
-            $entityData = [];
-            foreach ($this->entity->toArray() as $row){
-                if($row)
-                    array_push($entityData,BuilderFactory::Builder($this->table,$row));
-            }
-            if(!$entityData)return null;
-            $this->entity = $entityData;
-        }else{
-            $this->entity = BuilderFactory::Builder($this->table,$this->entity->toArray());
-        }
+    public function toObject(array $data = [])
+    {
+        $entity = empty($data) ? $this->entity->toArray() : $data;
 
+        if (is_array($entity))
+        {
+            $entityData = [];
+            foreach ($entity as $row)
+            {
+                if ($row) array_push(
+                    $entityData,
+                    BuilderFactory::Builder(
+                        $this->table,
+                        $row
+                    )
+                );
+            }
+            if (!$entityData) return null;
+            $this->entity = $entityData;
+        } else
+        {
+            $this->entity = BuilderFactory::Builder(
+                $this->table,
+                $entity
+            );
+        }
         return $this->entity;
     }
 
     /**
+     * @param array $data
      * @return BuilderFactory
      * @throws BaseException
      */
-    public function firstObject() : object {
-        return  BuilderFactory::Builder($this->table,$this->entity[0]);
+    public function firstObject(array $data = []): object
+    {
+        return (!empty($data[0]->getId())) ? $data[0] : BuilderFactory::Builder(
+            $this->table,
+            empty($data) ? $this->entity[0] : $data[0]
+        );
     }
 
-    public function lastObject() : object{
-        return  BuilderFactory::Builder($this->table,$this->entity[count($this->entity)-1]);
+    /**
+     * @param array $data
+     * @return object
+     * @throws BaseException
+     */
+    public function lastObject(array $data = []): object
+    {
+        return (!empty($data[0]->getId())) ? $data[0] : BuilderFactory::Builder(
+            $this->table,
+            empty($data) ? $this->entity[count($this->entity->toArray()) - 1] : $data[count(
+                $data
+            ) - 1]
+        );
     }
-
 
     /**
      * @param string $column
      * @param string $direction
-     * @param int $take
-     * @param array $columns
+     * @param int    $take
+     * @param array  $columns
      * @return $this
+     * @throws BaseException
      */
-    public function getAll($columns = ["*"],$column = "id", $direction = "asc", $take = 100): object
+    public function getAll($columns = ["*"], $column = "id", $direction = "asc", $take = 100): array
     {
-        $this->entity = $this->_db->where()->orderBy($column,$direction)->take($take)->get($columns);
-        return $this;
+        return $this->toObject(
+            $this->_db->where()
+                ->orderBy(
+                    $column,
+                    $direction
+                )
+                ->take($take)
+                ->get($columns)
+                ->toArray()
+        );
     }
-
 
     /**
      * @param object $entity
      * @return GenericRepository
      * @throws BaseException
      */
-    public function add(object $entity) : object
+    public function add(object $entity): object
     {
         //insert into entity(?,?) values(?,?)
         $this->entity = $entity;
         $entity = $this->_db->add($entity->toArray());
-        $this->entity = BuilderFactory::Builder($this->table,$entity->getEntity());
-        return $this;
+        $this->entity = BuilderFactory::Builder(
+            $this->table,
+            $entity->getEntity()
+        );
+        return $this->entity;
     }
-
 
     /**
      * Ok
@@ -148,9 +207,8 @@ class GenericRepository implements IRepository
      */
     public function addRange(array $entity): bool
     {
-        return $this->_db->addRange($entity);;
+        return $this->_db->addRange($entity);
     }
-
 
     /**
      * Ok
@@ -158,12 +216,17 @@ class GenericRepository implements IRepository
      * @return int
      * @throws BaseException
      */
-    public function edit(object $entity) : int
+    public function edit(object $entity): int
     {
-        if($entity->getId() == 0){
-          throw new BaseException($this->table,"entity no exits");
+        if ($entity->getId() == 0)
+        {
+            throw new BaseException(
+                $this->table,
+                "entity no exits"
+            );
         }
         $this->entity = $entity;
+
         return $this->_db->edit($entity);
     }
 
@@ -175,11 +238,15 @@ class GenericRepository implements IRepository
      */
     public function del(object $entity = null): bool
     {
-
-        if(empty($entity->getId())){
-            throw new BaseException($this->table,"entity no exits");
+        if (empty($entity->getId()))
+        {
+            throw new BaseException(
+                $this->table,
+                "entity no exits"
+            );
         }
         $this->entity = $entity;
+
         return $this->_db->del($entity) > 0;
     }
 
@@ -190,14 +257,12 @@ class GenericRepository implements IRepository
      * @return bool
      * @throws BaseException
      */
-    public function deleteRange(array $entity =null, string $column = "id"): bool
+    public function deleteRange(array $entity = null, string $column = "id"): bool
     {
         return $this->_db->deleteRange($entity);
     }
 
-
     public function __destruct()
     {
     }
-
 }

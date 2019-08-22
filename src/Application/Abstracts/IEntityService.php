@@ -21,6 +21,7 @@
 namespace Src\Application\Abstracts;
 
 
+use Src\Domain\Abstracts\IEntity;
 use Src\Domain\Abstracts\IRepository;
 use Src\Domain\Abstracts\IUnitOfWork;
 
@@ -34,32 +35,37 @@ interface IEntityService
     public function __construct(IUnitOfWork $iUnitOfWork, IRepository $repository);
 
     /**
+     * @param int $id
+     * @return IEntity
+     */
+    public function find(int $id);
+
+    /**
+     * @param array $entity
+     * @return array
+     */
+    public function findBy(array $entity = []);
+
+    /**
+     * @param IEntity $entity
      * @return object
      */
-    public function find() : object;
+    public function create(IEntity $entity) ;
+
+    /**
+     * @param IEntity $entity
+     * @return bool
+     */
+    public function delete(IEntity $entity);
 
     /**
      * @return array
      */
-    public function findBy() : array;
+    public function getAll();
 
     /**
-     * @return object
-     */
-    public function create() : object;
-
-    /**
+     * @param IEntity $entity
      * @return bool
      */
-    public function delete(): bool;
-
-    /**
-     * @return array
-     */
-    public function getAll() : array;
-
-    /**
-     * @return bool
-     */
-    public function update() : bool;
+    public function update(IEntity $entity);
 }
